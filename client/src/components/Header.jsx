@@ -308,13 +308,29 @@ function Header({ toggleCart, toggleSidebar }) {
             </div>
           </Link>
         ) : (
-          <Link to="/login" className="hdr-user">
-            <div className="hdr-avatar"><i className="fas fa-user"></i></div>
-            <div className="hdr-user-info">
-              <small>Welcome 👋</small>
-              <strong>Sign In</strong>
-            </div>
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link to="/login" className="hdr-user">
+              <div className="hdr-avatar"><i className="fas fa-user"></i></div>
+              <div className="hdr-user-info">
+                <small>Welcome 👋</small>
+                <strong>Sign In</strong>
+              </div>
+            </Link>
+            <Link 
+              to="/register" 
+              className="btn-main" 
+              style={{ 
+                padding: '8px 16px', 
+                fontSize: '12px', 
+                fontWeight: '700',
+                borderRadius: 'var(--radius-full)',
+                boxShadow: 'none',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              Create Account
+            </Link>
+          </div>
         )}
       </div>
     </header>

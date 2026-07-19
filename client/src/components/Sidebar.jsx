@@ -72,6 +72,13 @@ function Sidebar({ isOpen, onClose }) {
           <span className="nav-label">Support</span>
           <span className="nav-tooltip">Chat Support</span>
         </button>
+        {!isAuthenticated && (
+          <button onClick={() => handleNavClick('/register')} className={`nav-item${isActive('/register')}`} title="Register">
+            <i className="fas fa-user-plus"></i>
+            <span className="nav-label">Register</span>
+            <span className="nav-tooltip">Create Account</span>
+          </button>
+        )}
       </nav>
       <div className="sidebar-bottom">
         <button className="theme-toggle" title="Toggle Theme" onClick={toggleTheme}>
