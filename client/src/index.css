@@ -1522,8 +1522,8 @@ ul,ol{list-style:none}
 
   /* Location */
   .location-pill{gap:6px;padding:6px 10px}
-  .location-pill div{display:none}
-  .location-pill strong{max-width:100px;font-size:12px}
+  .location-pill div{display:block}
+  .location-pill strong{max-width:110px;font-size:11px}
 
   /* Auth */
   .auth-overlay{padding:12px;align-items:flex-start;padding-top:20px}
