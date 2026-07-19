@@ -28,68 +28,11 @@ function Login() {
     }
   }, [error, toast, dispatch]);
 
-  const playWelcomeVoice = (userName) => {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-
-    const greeting = userName
-      ? `Welcome to Foodify, ${userName}! The app is proudly developed by Ujjwal, Afroz, Saurabh, and Akshat.`
-      : `Welcome to Foodify! The app is proudly developed by Ujjwal, Afroz, Saurabh, and Akshat.`;
-
-    const speak = (voices) => {
-      const utterance = new SpeechSynthesisUtterance(greeting);
-
-      // Priority order for Indian English female voice
-      const voice =
-        // 1st choice: Google Indian English female
-        voices.find(v => v.name === 'Google हिन्दी') ||
-        voices.find(v => v.lang === 'en-IN' && v.name.toLowerCase().includes('female')) ||
-        voices.find(v => v.lang === 'en-IN') ||
-        // 2nd choice: Microsoft Heera (Indian English female on Windows)
-        voices.find(v => v.name.includes('Heera')) ||
-        voices.find(v => v.name.includes('Raveena')) ||
-        // 3rd choice: Any Google female English voice
-        voices.find(v => v.name === 'Google UK English Female') ||
-        voices.find(v => v.name === 'Google US English') ||
-        // 4th choice: Microsoft Zira (female, US)
-        voices.find(v => v.name.includes('Zira')) ||
-        voices.find(v => v.name.includes('Susan')) ||
-        voices.find(v => v.name.includes('Samantha')) ||
-        // Last resort: any female-sounding English voice
-        voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
-        voices.find(v => v.lang.startsWith('en'));
-
-      if (voice) utterance.voice = voice;
-
-      // Tune for clear, warm Indian female speech
-      utterance.lang = 'en-IN';
-      utterance.rate = 0.88;   // slightly slower = clearer pronunciation
-      utterance.pitch = 1.15;  // higher pitch = feminine
-      utterance.volume = 1.0;
-
-      window.speechSynthesis.speak(utterance);
-    };
-
-    // Voices may not be loaded yet — wait for them
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      speak(voices);
-    } else {
-      window.speechSynthesis.onvoiceschanged = () => {
-        speak(window.speechSynthesis.getVoices());
-      };
-    }
-  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      const userName = resultAction.payload?.user?.name || '';
       toast.success('Successfully signed in! Welcome back.');
-      // Small delay to let voices load on first call
-      setTimeout(() => playWelcomeVoice(userName), 300);
       navigate('/');
     }
   };

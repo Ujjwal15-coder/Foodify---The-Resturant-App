@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from '../components/Sidebar';
@@ -12,10 +12,73 @@ function MainLayout() {
   const location = useLocation();
   
   const { items } = useSelector(state => state.cart);
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const cartCount = items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   const toggleCart = () => setIsCartOpen(!isCartOpen);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const playWelcomeVoice = (userName) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+
+    const greeting = userName
+      ? `Welcome to Foodify, ${userName}! The app is proudly developed by Ujjwal, Afroz, Saurabh, and Akshat.`
+      : `Welcome to Foodify! The app is proudly developed by Ujjwal, Afroz, Saurabh, and Akshat.`;
+
+    const speak = (voices) => {
+      const utterance = new SpeechSynthesisUtterance(greeting);
+
+      // Priority order for Indian English female voice
+      const voice =
+        voices.find(v => v.name === 'Google हिन्दी') ||
+        voices.find(v => v.lang === 'en-IN' && v.name.toLowerCase().includes('female')) ||
+        voices.find(v => v.lang === 'en-IN') ||
+        voices.find(v => v.name.includes('Heera')) ||
+        voices.find(v => v.name.includes('Raveena')) ||
+        voices.find(v => v.name === 'Google UK English Female') ||
+        voices.find(v => v.name === 'Google US English') ||
+        voices.find(v => v.name.includes('Zira')) ||
+        voices.find(v => v.name.includes('Susan')) ||
+        voices.find(v => v.name.includes('Samantha')) ||
+        voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+        voices.find(v => v.lang.startsWith('en'));
+
+      if (voice) utterance.voice = voice;
+
+      utterance.lang = 'en-IN';
+      utterance.rate = 0.88;
+      utterance.pitch = 1.15;
+      utterance.volume = 1.0;
+
+      window.speechSynthesis.speak(utterance);
+    };
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      speak(voices);
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        speak(window.speechSynthesis.getVoices());
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const hasGreeted = sessionStorage.getItem('welcomeGreeted');
+      if (!hasGreeted) {
+        // Small delay to allow voices to register
+        const timer = setTimeout(() => {
+          playWelcomeVoice(user.name);
+          sessionStorage.setItem('welcomeGreeted', 'true');
+        }, 800);
+        return () => clearTimeout(timer);
+      }
+    } else if (!isAuthenticated) {
+      sessionStorage.removeItem('welcomeGreeted');
+    }
+  }, [isAuthenticated, user]);
 
   const getActiveCls = (path) => location.pathname === path ? 'bn-item active' : 'bn-item';
 
