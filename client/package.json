@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "VITE_API_URL=https://foodify-the-resturant-app.onrender.com/api vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
