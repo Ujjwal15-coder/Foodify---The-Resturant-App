@@ -115,9 +115,6 @@ const userSchema = new mongoose.Schema({
 
 // Index for geospatial queries on addresses
 userSchema.index({ 'addresses.lat': 1, 'addresses.lng': 1 });
-userSchema.index({ email: 1 });
-userSchema.index({ phone: 1 });
-userSchema.index({ referralCode: 1 });
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {

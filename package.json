@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "react": "^19.2.7"
+  "name": "foodify-root",
+  "version": "1.0.0",
+  "description": "FOODIFY Root Package",
+  "scripts": {
+    "dev": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "start": "concurrently \"npm run server\" \"npm run dev\"",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

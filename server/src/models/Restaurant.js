@@ -66,9 +66,10 @@ const restaurantSchema = new mongoose.Schema({
   // Pricing
   priceRange: {
     type: String,
-    enum: ['$', '$$', '$$$', '$$$$'],
-    default: '$$',
+    enum: ['$', '$$', '$$$', '$$$$', '₹', '₹₹', '₹₹₹', '₹₹₹₹'],
+    default: '₹₹',
   },
+  priceForTwo: { type: Number, default: 400 }, // ₹ for two people
   // Status
   isActive: { type: Boolean, default: true },
   isOpen: { type: Boolean, default: true },
@@ -103,7 +104,6 @@ const restaurantSchema = new mongoose.Schema({
 
 // Geospatial index for nearby search
 restaurantSchema.index({ location: '2dsphere' });
-restaurantSchema.index({ slug: 1 });
 restaurantSchema.index({ isActive: 1, isOpen: 1 });
 restaurantSchema.index({ avgRating: -1 });
 restaurantSchema.index({ cuisines: 1 });

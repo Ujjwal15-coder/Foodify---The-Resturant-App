@@ -1,0 +1,40 @@
+# Render Deployment Config
+# This file lets Render auto-deploy both services from one repo
+
+services:
+  # ── Backend API (Web Service) ──────────────────────────
+  - type: web
+    name: fodify-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false   # Set this manually in Render dashboard (your Atlas URI)
+      - key: JWT_SECRET
+        sync: false   # Set this manually — use a strong random string
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: CLIENT_URL
+        sync: false   # Set to your frontend Render URL after first deploy
+    healthCheckPath: /api/health
+
+  # ── Frontend Static Site ───────────────────────────────
+  - type: web
+    name: fodify-frontend
+    runtime: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false   # Set to your backend Render URL + /api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

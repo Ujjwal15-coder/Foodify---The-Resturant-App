@@ -1,6 +1,7 @@
 /**
  * FOODIFY — Main Server Entry Point
  * Express + MongoDB + Socket.IO
+ * Trigger nodemon restart
  */
 require('dotenv').config();
 const express = require('express');
@@ -17,10 +18,29 @@ const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 const app = express();
 const server = http.createServer(app);
 
+// ---- CORS Origins ----
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Also allow any .onrender.com domain
+    if (origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) return callback(null, true);
+    callback(new Error(`CORS blocked: ${origin}`));
+  },
+  credentials: true,
+};
+
 // ---- Socket.IO Setup ----
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -31,10 +51,7 @@ app.set('io', io);
 
 // ---- Security Middleware ----
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true,
-}));
+app.use(cors(corsOptions));
 
 // ---- Body Parsers ----
 app.use(express.json({ limit: '10mb' }));
