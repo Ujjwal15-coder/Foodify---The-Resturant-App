@@ -15,9 +15,10 @@ function Login() {
   
   const { loading, error, isAuthenticated } = useSelector(state => state.auth);
 
+  // If already authenticated (e.g. returning user with token), redirect immediately
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -32,11 +33,19 @@ function Login() {
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      toast.success('Successfully signed in! Welcome back.');
-      navigate('/');
+      toast.success('Welcome back! Signing you in...');
+      // Navigation is handled by the isAuthenticated useEffect above
     }
   };
 
+  // Avoid rendering form if already authenticated (prevents black flash)
+  if (isAuthenticated) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <i className="fas fa-spinner fa-spin" style={{ fontSize: '32px', color: 'var(--primary)' }}></i>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-overlay">

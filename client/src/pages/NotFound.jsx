@@ -6,7 +6,7 @@ function NotFound() {
   return (
     <div className="not-found-page">
       <div className="not-found-icon">
-        <i className="fas fa-burger-slash"></i>
+        <i className="fas fa-bowl-food"></i>
       </div>
       <h1>404</h1>
       <p>Oops! The page you are looking for has been eaten or does not exist.</p>

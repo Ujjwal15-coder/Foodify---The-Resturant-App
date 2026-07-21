@@ -21,11 +21,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Clear local storage and dispatch logout if needed
+    const isAuthEndpoint = error.config?.url?.includes('/auth/');
+    const isAlreadyOnLogin = window.location.pathname === '/login' || window.location.pathname === '/register';
+
+    if (error.response?.status === 401 && !isAuthEndpoint && !isAlreadyOnLogin) {
+      // Clear local storage on token expiry
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login'; // Redirect to login on token expiry
+      // Use React Router-compatible navigation to avoid full page blank
+      window.location.replace('/login');
     }
     return Promise.reject(error);
   }
