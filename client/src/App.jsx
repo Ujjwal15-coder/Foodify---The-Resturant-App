@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Suspense, lazy } from 'react-router-dom';
-import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart } from './store/cartSlice';
 import { ToastProvider } from './components/Toast';
