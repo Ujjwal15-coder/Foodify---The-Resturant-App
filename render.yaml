@@ -33,7 +33,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        sync: false   # Set to your backend Render URL + /api
+        value: https://foodify-the-resturant-app.onrender.com/api
     routes:
       - type: rewrite
         source: /*
