@@ -1769,7 +1769,7 @@ ul,ol{list-style:none}
 }
 .sidebar-overlay.active{display:block}
 @media(max-width:900px){
-  .sidebar.mobile-open{display:flex;z-index:200;animation:slideRight .3s ease}
+  .sidebar.mobile-open{display:flex;z-index:200;width:76px;animation:slideRight .3s ease}
 }
 
 /* Order success animation */
